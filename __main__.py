@@ -32,19 +32,19 @@ def main(screen):
     catcher_width = 6
     # (AH) velocity is going straight down y-axis from whichever x-axis.
     velocity = Point(0, 1)
-    # (AH) loop to place falling number_letter characters.
-    for x in range(0 + catcher_width, constants.MAX_X - catcher_width):
+    # (AH) let's fix 5 falling characters each time.
+    for i in range(5):
         falling_char = random.choice(
             ["D", "E", "F", "G", "H", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
         )
+        x = random.randint(catcher_width, constants.MAX_X - catcher_width)
         y = 0
         position = Point(x, y)
-        number_letter = Actor()
-        number_letter.set_text(falling_char)
-        number_letter.set_position(position)
-        number_letter.set_velocity(velocity)
-        # cast["brick"].append(brick)
-        # (AH) not building brick wall in Math Properties game.
+        num_let = Actor()
+        num_let.set_text(falling_char)
+        num_let.set_position(position)
+        num_let.set_velocity(velocity)
+        cast["number_letter"].append(num_let)
 
     # (AH) not having single ball in Math Properties game.
     # x = int(constants.MAX_X / 2)
