@@ -13,6 +13,8 @@ from math_properties.input_service import InputService
 from math_properties.output_service import OutputService
 from asciimatics.screen import Screen
 
+from math_properties import constants
+
 
 def main(screen):
 
@@ -23,21 +25,20 @@ def main(screen):
     y = int(constants.MAX_Y - 1)
     position = Point(x, y)
     paddle = Actor()
-    paddle.set_text("===========")
+    # (AH) shortened paddle for Math Properties final proj game.
+    paddle.set_text("======")
     paddle.set_position(position)
     cast["paddle"] = [paddle]
 
     cast["number_letter"] = []
-    # (AH) assume new paddle/catcher width is 6 for now, paddle is 11.
-    catcher_width = 6
     # (AH) velocity is going straight down y-axis from whichever x-axis.
     velocity = Point(0, 1)
-    # (AH) let's fix 5 falling characters each time.
+    # (AH) try 5 falling characters each time.
     for i in range(5):
         falling_char = random.choice(
             ["D", "E", "F", "G", "H", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
         )
-        x = random.randint(catcher_width, constants.MAX_X - catcher_width)
+        x = random.randint(constants.LEN_PADDLE, constants.MAX_X - constants.LEN_PADDLE)
         y = 0
         position = Point(x, y)
         num_let = Actor()
