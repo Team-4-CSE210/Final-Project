@@ -1,4 +1,7 @@
+import pygame
+import random
 from math_properties import constants
+
 from math_properties.point import Point
 
 
@@ -90,3 +93,4 @@ class Actor:
             position (Point): The given velocity.
         """
         self._velocity = velocity
+

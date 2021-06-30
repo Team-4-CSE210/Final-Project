@@ -1,5 +1,6 @@
 # program entry point
 
+import arcade
 import random
 from math_properties import constants
 from math_properties.director import Director
@@ -11,16 +12,19 @@ from math_properties.handle_collisions_action import HandleCollisionsAction
 from math_properties.move_actors_action import MoveActorsAction
 from math_properties.input_service import InputService
 from math_properties.output_service import OutputService
-from asciimatics.screen import Screen
+# from asciimatics.screen import Screen
 
-from math_properties import constants
 
 
 def main(screen):
 
+
+
+    """
     # create the cast {key: tag, value: list}
     cast = {}
 
+    # (AH) Block for paddle/catcher Actor.
     x = int(constants.MAX_X / 2)
     y = int(constants.MAX_Y - 1)
     position = Point(x, y)
@@ -30,7 +34,9 @@ def main(screen):
     paddle.set_position(position)
     cast["paddle"] = [paddle]
 
-    cast["number_letter"] = []
+    # (AH) Block for falling fruits and numbers.
+    # (AH) cast is a dictionary because there are different kinds of actors.
+    cast["fruitNnumber"] = []
     # (AH) velocity is going straight down y-axis from whichever x-axis.
     velocity = Point(0, 1)
     # (AH) try 5 falling characters each time.
@@ -41,11 +47,11 @@ def main(screen):
         x = random.randint(constants.LEN_PADDLE, constants.MAX_X - constants.LEN_PADDLE)
         y = 0
         position = Point(x, y)
-        num_let = Actor()
-        num_let.set_text(falling_char)
-        num_let.set_position(position)
-        num_let.set_velocity(velocity)
-        cast["number_letter"].append(num_let)
+        fruit_num = Actor()
+        fruit_num.set_text(falling_char)
+        fruit_num.set_position(position)
+        fruit_num.set_velocity(velocity)
+        cast["fruitNnumber"].append(fruit_num)
 
     # (AH) not having single ball in Math Properties game.
     # x = int(constants.MAX_X / 2)
@@ -71,6 +77,7 @@ def main(screen):
     script["input"] = [control_actors_action]
     script["update"] = [move_actors_action, handle_collisions_action]
     script["output"] = [draw_actors_action]
+"""
 
     # start the game
     director = Director(cast, script)
@@ -78,3 +85,4 @@ def main(screen):
 
 
 Screen.wrapper(main)
+
