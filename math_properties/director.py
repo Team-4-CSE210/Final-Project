@@ -1,6 +1,6 @@
 import arcade
-from game import constants
-from game.falling_item import FallingItem
+from math_properties import constants
+from math_properties.falling_item import FallingItem
 
 class Director(arcade.Window):
 

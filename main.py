@@ -1,4 +1,4 @@
-from game.director import Director
+from math_properties.director import Director
 import arcade
 
 director = Director()
