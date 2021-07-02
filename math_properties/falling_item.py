@@ -1,15 +1,24 @@
 import arcade
-from game import constants
+from math_properties import constants
+
+fruits_info = {}
+fruits_info["apple"] = ["images/apple.png", 0.1, "The apple is nice"]
+fruits_info["banana"] = ["images/banana.png", 0.2, "The banana is awesome"]
+fruits_info["orange"] = ["images/grapes.png", 0.02, "The grapes are delicious"]
+fruits_info["strawberry"] = ["images/strawberry.png", 0.02, "The grapes are delicious"]
+fruits_info["sandia"] = ["images/sandia.png", 0.02, "The strawberry looks shiny"]
+fruits_info["pineapple"] = ["images/pineapple.png", 0.02, "The pineapple is big"]
+fruits_info["kiwi"] = ["images/kiwi.png", 0.02, "The kiwi looks yummy"]
 
 class FallingItem(arcade.Sprite):
 
     FALLING_ITEM_SPEED = 0
 
-    def __init__(self):
-        super().__init__(
-            # Sprite filename and scale
-            constants.SHIP_SPRITE_PATH, .1
-        )
+    def __init__(self, type):
+        filename = fruits_info[type][0]
+        scale = fruits_info[type][1]
+
+        super().__init__(filename = filename, scale = scale)
         #
         self.width = 156
         self.height = 166
@@ -18,6 +27,14 @@ class FallingItem(arcade.Sprite):
         self.center_y = 100#constants.SCREEN_HEIGHT
 
         self.change_y = self.FALLING_ITEM_SPEED
+        self.description = fruits_info[type][2]
+        self.type = type
+
+    def get_description(self):
+        return self.description
+  
+    def get_type(self):
+        return self.type
 
     def update(self):
         """ Move the player """
