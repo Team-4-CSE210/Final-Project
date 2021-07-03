@@ -53,7 +53,6 @@ class Director(arcade.Window):
         )
         self.player.draw()
         self.falling_item_list.draw()
-        self.player_list.draw()
 
     def on_update(self, delta_time: float):
         self.current_time += 1
