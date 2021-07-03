@@ -13,7 +13,7 @@ class Player(arcade.Sprite):
         )
         #
         self.width = 160
-        self.height = 166
+        self.height = 160
         # Set location of sprite in the window
         self.center_x = constants.SCREEN_WIDTH/2
         self.center_y = 100#constants.SCREEN_HEIGHT
@@ -37,5 +37,5 @@ class Player(arcade.Sprite):
 
         if self.bottom < 0:
             self.bottom = 0
-        elif self.top > constants.SCREEN_HEIGHT - 1:
-            self.top = constants.SCREEN_HEIGHT - 1
+        elif self.top > constants.SCREEN_HEIGHT - 2:
+            self.top = constants.SCREEN_HEIGHT - 2
