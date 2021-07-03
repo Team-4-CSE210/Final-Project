@@ -101,6 +101,7 @@ class Director(arcade.Window):
 
         # (AH) Conditional stmts to check for mastery.
         if len(self.equation_list) >= self.equation_length:
+            self.num_tries += 1
             if self.score / self.num_tries > 0.85:
                 # (AH) TODO Add Sound.
                 # TODO print(Congratulation!)
