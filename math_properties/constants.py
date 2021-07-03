@@ -2,6 +2,7 @@ import os
 
 SCREEN_WIDTH = 1200
 SCREEN_HEIGHT = 700
+SCREEN_TITLE = "FRUIT MATH: Commutative Property of Addition: A + B = B + A"
 
 PATH = os.path.dirname(os.path.abspath(__file__))
 PADDLE_SPRITE_PATH = PATH + "/assets/paddle.png"

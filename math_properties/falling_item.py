@@ -12,14 +12,15 @@ fruits_info["pineapple"] = [constants.PINEAPPLE, 0.3]
 fruits_info["kiwi"] = [constants.KIWI, 0.2]
 fruits_name_list = list(fruits_info.keys())
 
+
 class FallingItem(arcade.Sprite):
 
-    #FALLING_ITEM_SPEED = -1
+    # FALLING_ITEM_SPEED = -1
 
     def __init__(self, type):
         filename = fruits_info[type][0]
         scale = fruits_info[type][1]
-        
+
         super().__init__(filename =filename, scale= scale)
         #
         #self.width = 156
@@ -28,9 +29,9 @@ class FallingItem(arcade.Sprite):
         self.center_x = random.randint(1, constants.SCREEN_WIDTH - 100)
         self.center_y = constants.SCREEN_HEIGHT #100
 
-        self.change_y = -2 #self.FALLING_ITEM_SPEED
+        self.change_y = -2  # self.FALLING_ITEM_SPEED
         self.type = type
-  
+
     def get_type(self):
         return self.type
 
