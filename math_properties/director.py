@@ -1,6 +1,7 @@
 import arcade
 from math_properties import constants
 from math_properties.falling_item import FallingItem
+from math_properties import Scoreboard
 
 class Director(arcade.Window):
 
@@ -30,6 +31,8 @@ class Director(arcade.Window):
         arcade.start_render()
 
         self.falling_item_list.draw()
+
+        Scoreboard.draw_scoreboard()
 
     def on_update(self, delta_time: float):
         self.falling_item_list.update()
