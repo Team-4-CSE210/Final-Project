@@ -12,24 +12,25 @@ fruits_info["pineapple"] = [constants.PINEAPPLE]
 fruits_info["kiwi"] = [constants.KIWI]
 fruits_name_list = list(fruits_info.keys())
 
+
 class FallingItem(arcade.Sprite):
 
-    #FALLING_ITEM_SPEED = -1
+    # FALLING_ITEM_SPEED = -1
 
     def __init__(self, type):
         filename = fruits_info[type][0]
-        
-        super().__init__(filename =filename)
+
+        super().__init__(filename=filename)
         #
         self.width = 156
         self.height = 166
         # Set location of sprite in the window
         self.center_x = 500
-        self.center_y = constants.SCREEN_HEIGHT #100
+        self.center_y = constants.SCREEN_HEIGHT  # 100
 
-        self.change_y = -2 #self.FALLING_ITEM_SPEED
+        self.change_y = -2  # self.FALLING_ITEM_SPEED
         self.type = type
-  
+
     def get_type(self):
         return self.type
 

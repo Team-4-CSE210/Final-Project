@@ -1,6 +1,7 @@
 import arcade
 from math_properties import constants
 
+
 class Player(arcade.Sprite):
 
     FALLING_ITEM_SPEED = 0
@@ -8,20 +9,19 @@ class Player(arcade.Sprite):
     def __init__(self):
         super().__init__(
             # Sprite filename and scale
-            constants.PADDLE_SPRITE_PATH, .1
-
-        )
+            constants.PADDLE_SPRITE_PATH, .1)
         #
         self.width = 160
         self.height = 166
         # Set location of sprite in the window
         self.center_x = constants.SCREEN_WIDTH/2
-        self.center_y = 100#constants.SCREEN_HEIGHT
+        self.center_y = 100  # constants.SCREEN_HEIGHT
 
         self.change_y = self.FALLING_ITEM_SPEED
-        
+
     def set_velocity_x(self, v):
         self.change_x = v
+        
     def update(self):
         """ Move the player """
         # Move player.
