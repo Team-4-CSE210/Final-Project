@@ -17,6 +17,7 @@ class Director(arcade.Window):
         self.player = None
         self.fallingItem = None
         self.background = None
+        self.score = 0
 
     def setup(self):
         self.player = Player()
@@ -33,6 +34,7 @@ class Director(arcade.Window):
                                             #
         self.player.draw()
         self.falling_item_list.draw()
+        Scoreboard.draw_scoreboard(self)
 
     def on_update(self, delta_time: float):
         self.current_time += 1
@@ -48,14 +50,14 @@ class Director(arcade.Window):
         self.player.update()
 
         #Collision
+        
         hit_list = arcade.check_for_collision_with_list(self.player, self.falling_item_list)
         for fruit in hit_list:
             fruit.remove_from_sprite_lists()
-    def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
-        pass
 
-    def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
-        pass
+        Scoreboard.update_scoreboard(hit_list, self)
+        if(len(hit_list) == 4):
+            Scoreboard.update_score(hit_list, self)
 
     def on_mouse_motion(self, x: float, y: float, dx: float, dy: float):
         self.player.center_x = x
@@ -63,9 +65,9 @@ class Director(arcade.Window):
 
     def on_key_press(self, symbol: int, modifiers: int):
         if symbol == arcade.key.LEFT:
-            self.player.change_x = -2
+            self.player.change_x = -7
         elif symbol == arcade.key.RIGHT:
-            self.player.change_x = 2
+            self.player.change_x = 7
 
     def on_key_release(self, symbol: int, modifiers: int):
         self.player.change_x = 0
