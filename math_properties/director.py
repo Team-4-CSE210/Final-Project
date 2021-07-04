@@ -2,35 +2,24 @@ import arcade
 import random
 from math_properties import constants
 from math_properties.falling_item import FallingItem
+from math_properties.scoreboard import Scoreboard
 from math_properties.player import Player
 import time
 
-
-class Director(arcade.View):
-
-    # (AH) LATER change screen title depending on math property.
-
-    # --- Other Data: block begins ---
-    # (AH) initialize score to check for above 85% mastery of math property.
-    score = 0
-    # (AH) game ends when Player achieves above 85% mastery.
-    num_tries = 0
-    # (AH) Attributes for use in Collision block during Update.
-    # (AH) initialize equation list to compare with math property.
-    equation_list = []
-    # (AH) LATER when doing all properties, equation_length is a var int.
-    equation_length = 4
-    # --- Other Data: block ends ---
+class Director(arcade.Window):
 
     def __init__(self):
-        # call the parent class initializer.
-        super().__init__()
+        super().__init__(constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT, constants.SCREEN_TITLE)
 
         self.current_time = 0
         self.falling_item_list = arcade.SpriteList()
         self.player = None
         self.fallingItem = None
         self.background = None
+        self.score = 0
+        self.basket_list = []
+        self.num_tries = 0
+        self.text = "Scoreboard:\nearned points: %d \npoints till next level: %d\n %s+ = + " %(0, 10, '')
 
     def setup(self):
         self.player = Player()
@@ -56,6 +45,7 @@ class Director(arcade.View):
         )
         self.player.draw()
         self.falling_item_list.draw()
+        Scoreboard.draw_scoreboard(self)
 
     def on_update(self, delta_time: float):
         self.current_time += 1
@@ -105,6 +95,12 @@ class Director(arcade.View):
         # (AH) remove to release object from memory.
         for fruit in hit_list:
             fruit.remove_from_sprite_lists()
+        if (len(hit_list) > 0):
+            Scoreboard.update_scoreboard(self, hit_list)
+        length = len(self.basket_list)
+        if (length >= 4):
+            Scoreboard.update_score(self)
+            hit_list = []
 
         # (AH) for Beta Release, stop after one correct equation.
         # (AH) Conditional stmts to check for mastery.
@@ -127,9 +123,9 @@ class Director(arcade.View):
 
     def on_key_press(self, symbol: int, modifiers: int):
         if symbol == arcade.key.LEFT:
-            self.player.change_x = -2
+            self.player.change_x = -7
         elif symbol == arcade.key.RIGHT:
-            self.player.change_x = 2
+            self.player.change_x = 7
 
         if symbol == arcade.key.Q:
             # Quit immediately

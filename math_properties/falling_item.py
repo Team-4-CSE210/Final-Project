@@ -23,8 +23,8 @@ class FallingItem(arcade.Sprite):
 
         super().__init__(filename =filename, scale= scale)
         #
-        #self.width = 156
-        #self.height = 166
+        # self.width = 156
+        # self.height = 166
         # Set location of sprite in the window
         self.center_x = random.randint(1, constants.SCREEN_WIDTH - 100)
         self.center_y = constants.SCREEN_HEIGHT #100
