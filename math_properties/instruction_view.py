@@ -13,7 +13,7 @@ class InstructionView(arcade.View):
         arcade.draw_text("Click to advance", constants.SCREEN_WIDTH/2, constants.SCREEN_HEIGHT/2-75,
                          arcade.color.GRAY, font_size=20, anchor_x="center")
 
-    def on_mouse_press(self, _x, _y, _button, _modifiers):
+    def on_mouse_press(self, x: float, y: float, dx: float, dy: float):
         game_view = Director()
         game_view.setup()
         self.window.show_view(game_view)
