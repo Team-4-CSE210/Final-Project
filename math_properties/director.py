@@ -6,10 +6,10 @@ from math_properties.scoreboard import Scoreboard
 from math_properties.player import Player
 import time
 
-class Director(arcade.Window):
+class Director(arcade.View):
 
     def __init__(self):
-        super().__init__(constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT, constants.SCREEN_TITLE)
+        super().__init__()
 
         self.current_time = 0
         self.falling_item_list = arcade.SpriteList()
