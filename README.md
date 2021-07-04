@@ -84,13 +84,13 @@ Select the main module inside the hunter folder and click the “run” icon.
 
 Use these letter keys to move the catcher Player:
 
-Letter "a" == Left;
+Left arrow == Left;
 
-Letter "d" == Right;
+Right arrow == Right;
 
-Letter "w" == Up;
+Q == Quit.
 
-Letter "s" == Down.
+Player only moves horizontally.
 
 
 ## Project Structure
@@ -129,10 +129,13 @@ Arcade
 
 ## Authors
 ---
+
 Agnes H. (hay19016@byui.edu)
 
 Kelton G. (gre16027@byui.edu)
 
+Mireya V. L. (mveraloo@byui.edu)
+
 Sarah A.
 
-Mireya V. L. (mveraloo@byui.edu)
+
