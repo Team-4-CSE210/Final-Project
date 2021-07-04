@@ -3,6 +3,7 @@ import random
 from math_properties import constants
 from math_properties.falling_item import FallingItem
 from math_properties.player import Player
+import time
 
 
 class Director(arcade.View):
@@ -23,8 +24,7 @@ class Director(arcade.View):
 
     def __init__(self):
         # call the parent class initializer.
-        super().__init__(
-        )
+        super().__init__()
 
         self.current_time = 0
         self.falling_item_list = arcade.SpriteList()
@@ -36,6 +36,11 @@ class Director(arcade.View):
         self.player = Player()
         # Load background texture
         self.background = arcade.load_texture(constants.BACKGROUND)
+        # Load game sounds
+        self.collision_sound = arcade.load_sound("math_properties/assets/sd_0.wav")
+        self.move_up_sound = arcade.load_sound("math_properties/assets/applause.wav")
+        # self.move_down_sound = arcade.load_sound(".wav")
+        self.background_music = arcade.load_sound("math_properties/assets/guitar-1.wav")
 
     def on_draw(self):
         """
@@ -69,10 +74,12 @@ class Director(arcade.View):
                 fr.kill()
         self.player.update()
 
-        # Collision
+        # Collision: list and sound.
         hit_list = arcade.check_for_collision_with_list(
             self.player, self.falling_item_list
         )
+        if hit_list:
+            arcade.play_sound(self.collision_sound)
 
         # (AH) Begin block to verify Math Property.
         # (AH) include collected fruit into equation list.
@@ -87,22 +94,25 @@ class Director(arcade.View):
                 and self.equation_list[3] == self.equation_list[0]
             ):
                 self.score += 1
-            # (AH) DEBUGGING CODE
-            # print(f"Checking equation: {self.score}")
+            # (AH) applause sound when correct.
+            arcade.play_sound(self.move_up_sound)
+
+            # (AH) for Beta Release, stop after one correct equation.
+            time.sleep(5)
+            arcade.close_window()
             return
 
         # (AH) remove to release object from memory.
         for fruit in hit_list:
-            # (AH) DEBUGGING CODE
-            # print(f"Got {fruit.type}")
             fruit.remove_from_sprite_lists()
 
+        # (AH) for Beta Release, stop after one correct equation.
         # (AH) Conditional stmts to check for mastery.
         if len(self.equation_list) >= self.equation_length:
             self.num_tries += 1
             if self.score / self.num_tries > 0.85:
-                # (AH) TODO Add Sound.
-                # TODO print(Congratulation!)
+                # (AH) End Sound.
+                arcade.play_sound(self.background_music)
                 arcade.close_window()
 
         return
