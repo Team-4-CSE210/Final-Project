@@ -5,10 +5,9 @@ from math_properties.falling_item import FallingItem
 from math_properties.player import Player
 
 
-class Director(arcade.Window):
+class Director(arcade.View):
 
     # (AH) LATER change screen title depending on math property.
-    SCREEN_TITLE = "FRUIT MATH: Commutative Property of Addition: A + B = B + A"
 
     # --- Other Data: block begins ---
     # (AH) initialize score to check for above 85% mastery of math property.
@@ -25,7 +24,6 @@ class Director(arcade.Window):
     def __init__(self):
         # call the parent class initializer.
         super().__init__(
-            constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT, self.SCREEN_TITLE
         )
 
         self.current_time = 0
