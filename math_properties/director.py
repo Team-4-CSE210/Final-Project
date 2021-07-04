@@ -18,6 +18,8 @@ class Director(arcade.Window):
         self.fallingItem = None
         self.background = None
         self.score = 0
+        self.basket_list = []
+        self.text = "Scoreboard:\nearned points: %d \npoints till next level: %d\n %s+ = + " %(0, 10, '')
 
     def setup(self):
         self.player = Player()
@@ -50,14 +52,16 @@ class Director(arcade.Window):
         self.player.update()
 
         #Collision
-        
         hit_list = arcade.check_for_collision_with_list(self.player, self.falling_item_list)
         for fruit in hit_list:
             fruit.remove_from_sprite_lists()
-
-        Scoreboard.update_scoreboard(hit_list, self)
-        if(len(hit_list) == 4):
-            Scoreboard.update_score(hit_list, self)
+        if (len(hit_list) > 0):
+            Scoreboard.update_scoreboard(self, hit_list)
+        print(len(self.basket_list))  
+        length = len(self.basket_list)  
+        if (length >= 4):
+            Scoreboard.update_score(self)
+            hit_list = []
 
     def on_mouse_motion(self, x: float, y: float, dx: float, dy: float):
         self.player.center_x = x
