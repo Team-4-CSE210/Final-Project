@@ -25,6 +25,11 @@ class Scoreboard():
                         self.score = self.score + 1
                         
                 self.basket_list = []
+                self.num_tries += 1
+                if self.score / self.num_tries > 0.85:
+                # (AH) TODO Add Sound.
+                # TODO print(Congratulation!)
+                        arcade.close_window()
 
         def draw_scoreboard(self):
                 """draws the scoreboard
