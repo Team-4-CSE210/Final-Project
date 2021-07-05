@@ -1,5 +1,6 @@
 import arcade
 from math_properties import constants
+import time
 
 class Scoreboard():
         """A class that keeps track of the scoreboard.
@@ -15,6 +16,7 @@ class Scoreboard():
         """
                 self.score = 0
                 self.basket_list = []
+                self.move_up_sound = arcade.load_sound("math_properties/assets/applause.wav")
 
         def update_score(self):
                 """updates the current score
@@ -24,6 +26,10 @@ class Scoreboard():
         """
                 if (self.basket_list[0] == self.basket_list[3] and self.basket_list[1] == self.basket_list[2]):
                         self.score = self.score + 1
+                        arcade.play_sound(self.move_up_sound)
+                        # (AH) for Beta Release, stop after one correct equation.
+                        time.sleep(5)
+                        arcade.close_window()
                         
                 self.basket_list = []
                 #self.num_tries += 1
