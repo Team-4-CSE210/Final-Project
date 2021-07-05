@@ -13,7 +13,8 @@ class Scoreboard():
         Args:
             self (Scoreboard): an instance of Scoreboard.
         """
-                super().__init__(constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT, self.SCREEN_TITLE)
+                self.score = 0
+                self.basket_list = []
 
         def update_score(self):
                 """updates the current score
@@ -25,11 +26,11 @@ class Scoreboard():
                         self.score = self.score + 1
                         
                 self.basket_list = []
-                self.num_tries += 1
-                if self.score / self.num_tries > 0.85:
+                #self.num_tries += 1
+                #if self.score / self.num_tries > 0.85:
                 # (AH) TODO Add Sound.
                 # TODO print(Congratulation!)
-                        arcade.close_window()
+                        #arcade.close_window()
 
         def draw_scoreboard(self):
                 """draws the scoreboard
