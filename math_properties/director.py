@@ -5,8 +5,8 @@ from math_properties.falling_item import FallingItem
 from math_properties.scoreboard import Scoreboard
 from math_properties.player import Player
 
-class Director(arcade.View):
 
+class Director(arcade.View):
     def __init__(self):
         super().__init__()
 
@@ -17,8 +17,10 @@ class Director(arcade.View):
         self.background = None
         self.list_length = 0
         self.num_tries = 0
-        self.text = "Scoreboard:\nearned points: %d \npoints till next level: %d\n %s+ = + " %(0, 10, '')
-        Scoreboard.__init__(self)
+        self.text = (
+            "Scoreboard:\nearned points: %d \npoints till next level: %d\n %s+ = + "
+            % (0, 10, "")
+        )
 
     def setup(self):
         self.player = Player()
@@ -26,8 +28,11 @@ class Director(arcade.View):
         self.background = arcade.load_texture(constants.BACKGROUND)
         # Load game sounds
         self.collision_sound = arcade.load_sound("math_properties/assets/sd_0.wav")
-        # self.move_down_sound = arcade.load_sound(".wav")
-        self.background_music = arcade.load_sound("math_properties/assets/guitar-1.wav")
+        self.move_up_sound = arcade.load_sound("math_properties/assets/applause.wav")
+        self.move_down_sound = arcade.load_sound(
+            "math_properties/assets/MS_Realization.wav"
+        )
+        self.background_music = arcade.load_sound("math_properties/assets/Won!.wav")
 
     def on_draw(self):
         """
@@ -62,7 +67,7 @@ class Director(arcade.View):
                 fr.kill()
         self.player.update()
 
-        #Collision 
+        #Collision
         hit_list = arcade.check_for_collision_with_list(self.player, self.falling_item_list)
         # Collision: list and sound.
         hit_list = arcade.check_for_collision_with_list(
@@ -76,8 +81,8 @@ class Director(arcade.View):
             self.list_length = self.list_length + 1
         if (len(hit_list) > 0):
 
-            Scoreboard.update_scoreboard(self, hit_list) 
-        
+            Scoreboard.update_scoreboard(self, hit_list)
+
         if (self.list_length >= 4):
 
             Scoreboard.update_score(self)
@@ -90,12 +95,11 @@ class Director(arcade.View):
             # self.num_tries += 1
             # if self.score / self.num_tries > 0.85:
                 # (AH) End Sound.
-               #  arcade.play_sound(self.background_music)
-               #  arcade.close_window()
+                #  arcade.play_sound(self.background_music)
+                #  arcade.close_window()
 
         # return
         # (AH) End block to verify Math Property.
-
 
     def on_mouse_motion(self, x: float, y: float, dx: float, dy: float):
         self.player.center_x = x
@@ -113,4 +117,3 @@ class Director(arcade.View):
 
     def on_key_release(self, symbol: int, modifiers: int):
         self.player.change_x = 0
-
