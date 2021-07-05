@@ -17,6 +17,10 @@ class Director(arcade.View):
         self.background = None
         self.list_length = 0
         self.num_tries = 0
+        self.basket_list = []
+        self.score = 0
+        # (AH) LATER equation_length should be a variable depending on Property.
+        self.equation_length = 4
         self.text = (
             "Scoreboard:\nearned points: %d \npoints till next level: %d\n %s+ = + "
             % (0, 10, "")
@@ -29,9 +33,7 @@ class Director(arcade.View):
         # Load game sounds
         self.collision_sound = arcade.load_sound("math_properties/assets/sd_0.wav")
         self.move_up_sound = arcade.load_sound("math_properties/assets/applause.wav")
-        self.move_down_sound = arcade.load_sound(
-            "math_properties/assets/MS_Realization.wav"
-        )
+        self.move_down_sound = arcade.load_sound("math_properties/assets/gong.wav")
         self.background_music = arcade.load_sound("math_properties/assets/Won!.wav")
 
     def on_draw(self):
@@ -48,6 +50,8 @@ class Director(arcade.View):
         )
         self.player.draw()
         self.falling_item_list.draw()
+
+        # (AH) CHECK with Brother Lythgoe about Instantiating Scoreboard.
         Scoreboard.draw_scoreboard(self)
 
     def on_update(self, delta_time: float):
@@ -67,36 +71,36 @@ class Director(arcade.View):
                 fr.kill()
         self.player.update()
 
-        #Collision
-        hit_list = arcade.check_for_collision_with_list(self.player, self.falling_item_list)
-        # Collision: list and sound.
+        # Collision
         hit_list = arcade.check_for_collision_with_list(
             self.player, self.falling_item_list
         )
 
         # (AH) remove to release object from memory.
         for fruit in hit_list:
-            fruit.remove_from_sprite_lists()
             arcade.play_sound(self.collision_sound)
+            fruit.remove_from_sprite_lists()
             self.list_length = self.list_length + 1
-        if (len(hit_list) > 0):
+        if len(hit_list) > 0:
 
+            # (AH) CHECK with Brother Lythgoe about Instantiating Scoreboard.
             Scoreboard.update_scoreboard(self, hit_list)
 
-        if (self.list_length >= 4):
+        if self.list_length >= self.equation_length:
 
-            Scoreboard.update_score(self)
+            # (AH) CHECK with Brother Lythgoe about Instantiating Scoreboard.
+            Scoreboard.update_score(self, hit_list)
             hit_list = []
             self.list_length = 0
 
-        # (AH) for Beta Release, stop after one correct equation.
+        # (AH) WHERE should game end check go?
         # (AH) Conditional stmts to check for mastery.
         # if len(self.equation_list) >= self.equation_length:
-            # self.num_tries += 1
-            # if self.score / self.num_tries > 0.85:
-                # (AH) End Sound.
-                #  arcade.play_sound(self.background_music)
-                #  arcade.close_window()
+        # self.num_tries += 1
+        # if self.score / self.num_tries > 0.85:
+        # (AH) End Sound.
+        #  arcade.play_sound(self.background_music)
+        #  arcade.close_window()
 
         # return
         # (AH) End block to verify Math Property.

@@ -16,32 +16,55 @@ class Scoreboard:
         Args:
             self (Scoreboard): an instance of Scoreboard.
         """
+        # (AH) CHECK with Brother Lythgoe if "self" refers to Director Class,
+        #       because Scoreboard was not Instantiated in Director Class.
+
         self.score = 0
         self.basket_list = []
+        # LATER equation_length should be variable depending on math property.
+        self.equation_length = 4
+        self.collision_sound = arcade.load_sound("math_properties/assets/sd_0.wav")
+        # move_up_sound when equation is correct.
         self.move_up_sound = arcade.load_sound("math_properties/assets/applause.wav")
+        # move_down_sound when equation is incorrect.
+        self.move_down_sound = arcade.load_sound(
+            "math_properties/assets/MS_Realization.wav"
+        )
+        # using background_music as end of game sound.
+        self.background_music = arcade.load_sound("math_properties/assets/Won!.wav")
 
-    def update_score(self):
+
+    def update_score(self, hit_list):
         """updates the current score
+
+        Equation checking happens here for falling items collected in basket.
 
         Args:
             self (Director): an instance of Director.
         """
-        if (
-            self.basket_list[0] == self.basket_list[3]
-            and self.basket_list[1] == self.basket_list[2]
-        ):
-            self.score = self.score + 1
-            arcade.play_sound(self.move_up_sound)
-            # (AH) for Beta Release, stop after one correct equation.
-            time.sleep(5)
-            arcade.close_window()
+        # (AH) Begin block to verify Math Property.
+        # (AH) include collected fruit into equation basket list.
+        self.basket_list.extend(hit_list)
 
-        self.basket_list = []
-        # self.num_tries += 1
-        # if self.score / self.num_tries > 0.85:
-        # (AH) TODO Add Sound.
-        # TODO print(Congratulation!)
-        # arcade.close_window()
+        # (AH) check if enough fruit has been collected for the equation.
+        # (AH) NOW only checking for Commutative Property of Addition.
+        # (AH) LATER use Math Class to check for all math properties.
+        if len(self.basket_list) == self.equation_length:
+            if (
+                self.basket_list[2] == self.basket_list[1]
+                and self.basket_list[3] == self.basket_list[0]
+            ):
+                self.score += 1
+                # (AH) applause sound when correct.
+                arcade.play_sound(self.move_up_sound)
+
+            else:
+                # (AH) minor chord sound when incorrect.
+                arcade.play_sound(self.move_down_sound)
+
+            # (AH) for Beta Release, stop after one correct equation.
+            # time.sleep(5)
+            # arcade.close_window()
 
     def draw_scoreboard(self):
         """draws the scoreboard
