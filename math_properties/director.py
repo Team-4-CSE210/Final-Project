@@ -17,11 +17,10 @@ class Director(arcade.View):
         self.background = None
         self.list_length = 0
         self.num_tries = 0
-        self.text = "Scoreboard:\nearned points: %d \npoints till next level: %d\n %s+ = + " %(0, 10, '')
-        Scoreboard.__init__(self)
 
     def setup(self):
         self.player = Player()
+        self.scoreboard = Scoreboard()
         # Load background texture
         self.background = arcade.load_texture(constants.BACKGROUND)
         # Load game sounds
@@ -43,7 +42,8 @@ class Director(arcade.View):
         )
         self.player.draw()
         self.falling_item_list.draw()
-        Scoreboard.draw_scoreboard(self)
+        self.scoreboard.draw_scoreboard()
+        arcade.finish_render()
 
     def on_update(self, delta_time: float):
         self.current_time += 1
@@ -64,25 +64,22 @@ class Director(arcade.View):
 
         #Collision 
         hit_list = arcade.check_for_collision_with_list(self.player, self.falling_item_list)
-        # Collision: list and sound.
-        hit_list = arcade.check_for_collision_with_list(
-            self.player, self.falling_item_list
-        )
 
-        # (AH) remove to release object from memory.
-        for fruit in hit_list:
+        for fruit in hit_list:  
+            self.scoreboard.update_scoreboard(fruit)
+            # (AH) remove to release object from memory.
             fruit.remove_from_sprite_lists()
             arcade.play_sound(self.collision_sound)
             self.list_length = self.list_length + 1
-        if (len(hit_list) > 0):
-
-            Scoreboard.update_scoreboard(self, hit_list) 
-        
-        if (self.list_length >= 4):
-
-            Scoreboard.update_score(self)
             hit_list = []
-            self.list_length = 0
+            if (self.list_length >= 4):
+                self.scoreboard.update_score()
+                self.list_length = 0
+                
+            
+            
+        
+        
 
         # (AH) for Beta Release, stop after one correct equation.
         # (AH) Conditional stmts to check for mastery.
@@ -94,6 +91,8 @@ class Director(arcade.View):
                #  arcade.close_window()
 
         # return
+        # (SA) Above code block that is commented out always exits game if there is an equation finished. also should be moved
+        # to scoreboard class.
         # (AH) End block to verify Math Property.
 
 

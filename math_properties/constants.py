@@ -14,4 +14,5 @@ KIWI = PATH + "/assets/kiwi.png"
 PINEAPPLE = PATH + "/assets/pineapple.png"
 STRAWBERRY = PATH + "/assets/strawberry.png"
 WATERMELON =  PATH + "/assets/watermelon.png"
+WHITE = PATH + "/assets/white.png"
 
