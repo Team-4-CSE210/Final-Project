@@ -19,8 +19,13 @@ class Director(arcade.View):
         self.num_tries = 0
         self.basket_list = []
         self.score = 0
+
+        # (AH) Instantiate Scoreboard Class so Scoreboard(self) != Director(self)
+        self.scoreboard = Scoreboard()
+
         # (AH) LATER equation_length should be a variable depending on Property.
         self.equation_length = 4
+
         self.text = (
             "Scoreboard:\nearned points: %d \npoints till next level: %d\n %s+ = + "
             % (0, 10, "")
@@ -31,10 +36,10 @@ class Director(arcade.View):
         # Load background texture
         self.background = arcade.load_texture(constants.BACKGROUND)
         # Load game sounds
-        self.collision_sound = arcade.load_sound("math_properties/assets/sd_0.wav")
-        self.move_up_sound = arcade.load_sound("math_properties/assets/applause.wav")
-        self.move_down_sound = arcade.load_sound("math_properties/assets/gong.wav")
-        self.background_music = arcade.load_sound("math_properties/assets/Won!.wav")
+        self.collision_sound = constants.COLLISION_SOUND
+        self.move_up_sound = constants.MOVE_UP_SOUND
+        self.move_down_sound = constants.MOVE_DOWN_SOUND
+        self.background_music = constants.BACKGROUND_MUSIC
 
     def on_draw(self):
         """
@@ -51,8 +56,8 @@ class Director(arcade.View):
         self.player.draw()
         self.falling_item_list.draw()
 
-        # (AH) CHECK with Brother Lythgoe about Instantiating Scoreboard.
-        Scoreboard.draw_scoreboard(self)
+        # (AH) ok. Brother Lythgoe -- Instantiating Scoreboard.
+        self.scoreboard.draw_scoreboard()
 
     def on_update(self, delta_time: float):
         self.current_time += 1
@@ -76,20 +81,24 @@ class Director(arcade.View):
             self.player, self.falling_item_list
         )
 
-        # (AH) remove to release object from memory.
+        # (AH) Question: why this For Loop ?
         for fruit in hit_list:
-            arcade.play_sound(self.collision_sound)
+            self.collision_sound
+            # (AH) basket_list is equation to compare with math property.
+            self.basket_list.append(fruit)
+            # (AH) remove to release object from memory.
             fruit.remove_from_sprite_lists()
             self.list_length = self.list_length + 1
+
         if len(hit_list) > 0:
 
-            # (AH) CHECK with Brother Lythgoe about Instantiating Scoreboard.
-            Scoreboard.update_scoreboard(self, hit_list)
+            # (AH) pass in parameters for this Scoreboard Instance.
+            self.scoreboard.update_scoreboard(hit_list, self.basket_list, self.score)
 
         if self.list_length >= self.equation_length:
 
-            # (AH) CHECK with Brother Lythgoe about Instantiating Scoreboard.
-            Scoreboard.update_score(self, hit_list)
+            # (AH) pass in parameters for this Scoreboard Instance.
+            self.scoreboard.update_score(self, hit_list, self.basket_list, self.score)
             hit_list = []
             self.list_length = 0
 

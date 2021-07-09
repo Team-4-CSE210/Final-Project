@@ -1,6 +1,6 @@
 import arcade
-from math_properties import constants
 import time
+from math_properties import constants
 
 
 class Scoreboard:
@@ -16,25 +16,35 @@ class Scoreboard:
         Args:
             self (Scoreboard): an instance of Scoreboard.
         """
-        # (AH) CHECK with Brother Lythgoe if "self" refers to Director Class,
-        #       because Scoreboard was not Instantiated in Director Class.
+        self.message = "Welcome!"
+        self.point_percent = 0
+        self.text = "Scoreboard:\npercent of mastery: %d \nminimum percent needed:  85\n\n     +                      =                +\n\n\n%s" %(self.point_percent,self.message)
+        self.num_tries = 0
+        self.sprites = arcade.SpriteList(None,128,True)
+        self.list_length = 0
+        self.start_x = constants.SCREEN_WIDTH - 200
+        self.start_y = constants.SCREEN_HEIGHT - 60
+        start_y2 = self.start_y - 15
 
-        self.score = 0
-        self.basket_list = []
-        # LATER equation_length should be variable depending on math property.
-        self.equation_length = 4
-        self.collision_sound = arcade.load_sound("math_properties/assets/sd_0.wav")
-        # move_up_sound when equation is correct.
-        self.move_up_sound = arcade.load_sound("math_properties/assets/applause.wav")
-        # move_down_sound when equation is incorrect.
-        self.move_down_sound = arcade.load_sound(
-            "math_properties/assets/MS_Realization.wav"
-        )
-        # using background_music as end of game sound.
-        self.background_music = arcade.load_sound("math_properties/assets/Won!.wav")
+        firstSprite = arcade.Sprite(constants.KIWI, .07, 0, 0, 40, 40,self.start_x-120, start_y2)
+        self.sprites.append(firstSprite)
+        secondSprite = arcade.Sprite(constants.KIWI, .07, 0, 0, 40, 40,self.start_x-40, start_y2)
+        self.sprites.append(secondSprite)
+        thirdSprite = arcade.Sprite(constants.KIWI, .07, 0, 0, 40, 40,self.start_x+40, start_y2)
+        self.sprites.append(thirdSprite)
+        fourthSprite = arcade.Sprite(constants.KIWI, .07, 0, 0, 40, 40, self.start_x+120, start_y2)
+        self.sprites.append(fourthSprite)
 
+        for sprite in self.sprites:
+            sprite.append_texture(arcade.load_texture(constants.PINEAPPLE))
+            sprite.append_texture(arcade.load_texture(constants.APPLE))
+            sprite.append_texture(arcade.load_texture(constants.BANANA))
+            sprite.append_texture(arcade.load_texture(constants.KIWI))
+            sprite.append_texture(arcade.load_texture(constants.STRAWBERRY))
+            sprite.append_texture(arcade.load_texture(constants.WATERMELON))
+            sprite.append_texture(arcade.load_texture(constants.WHITE))
 
-    def update_score(self, hit_list):
+    def update_score(self, basket_list, equation_length, score):
         """updates the current score
 
         Equation checking happens here for falling items collected in basket.
@@ -44,23 +54,19 @@ class Scoreboard:
         """
         # (AH) Begin block to verify Math Property.
         # (AH) include collected fruit into equation basket list.
-        self.basket_list.extend(hit_list)
 
         # (AH) check if enough fruit has been collected for the equation.
         # (AH) NOW only checking for Commutative Property of Addition.
         # (AH) LATER use Math Class to check for all math properties.
-        if len(self.basket_list) == self.equation_length:
-            if (
-                self.basket_list[2] == self.basket_list[1]
-                and self.basket_list[3] == self.basket_list[0]
-            ):
-                self.score += 1
+        if len(basket_list) == equation_length:
+            if basket_list[2] == basket_list[1] and basket_list[3] == basket_list[0]:
+                score += 1
                 # (AH) applause sound when correct.
-                arcade.play_sound(self.move_up_sound)
+                constants.MOVE_UP_SOUND
 
             else:
-                # (AH) minor chord sound when incorrect.
-                arcade.play_sound(self.move_down_sound)
+                # (AH) gonk sound when incorrect.
+                constants.MOVE_DOWN_SOUND
 
             # (AH) for Beta Release, stop after one correct equation.
             # time.sleep(5)
@@ -86,7 +92,7 @@ class Scoreboard:
             anchor_y="center",
         )
 
-    def update_scoreboard(self, hit_list):
+    def update_scoreboard(self, hit_list, basket_list, score):
         """updates the scoreboard with fruit caught and current score as well as how many points left to win.
 
         Args:
@@ -108,42 +114,36 @@ class Scoreboard:
                 self.basket_list.append("kiwi")
 
         points_left = 10 - self.score
-        length = len(self.basket_list)
+        length = len(basket_list)
         if length == 0:
             self.text = (
                 "Scoreboard:\nearned points: %d \npoints till next level: %d\n %s+ = + "
-                % (self.score, points_left, "")
+                % (score, points_left, "")
             )
         elif length == 1:
             self.text = (
                 "Scoreboard:\nearned points: %d \npoints till next level: %d\n %s+ = + "
-                % (self.score, points_left, self.basket_list[0])
+                % (score, points_left, basket_list[0])
             )
         elif length == 2:
             self.text = (
                 "Scoreboard:\nearned points: %d \npoints till next level: %d\n %s+ %s= + "
-                % (self.score, points_left, self.basket_list[0], self.basket_list[1])
+                % (score, points_left, basket_list[0], basket_list[1])
             )
         elif length == 3:
             self.text = (
                 "Scoreboard:\nearned points: %d \npoints till next level: %d\n %s+ %s= %s+ "
-                % (
-                    self.score,
-                    points_left,
-                    self.basket_list[0],
-                    self.basket_list[1],
-                    self.basket_list[2],
-                )
+                % (score, points_left, basket_list[0], basket_list[1], basket_list[2],)
             )
         elif length == 4:
             self.text = (
                 "Scoreboard:\nearned points: %d \npoints till next level: %d\n %s+ %s= %s+ %s"
                 % (
-                    self.score,
+                    score,
                     points_left,
-                    self.basket_list[0],
-                    self.basket_list[1],
-                    self.basket_list[2],
-                    self.basket_list[3],
+                    basket_list[0],
+                    basket_list[1],
+                    basket_list[2],
+                    basket_list[3],
                 )
             )
