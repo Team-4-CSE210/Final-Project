@@ -71,11 +71,11 @@ class Director(arcade.View):
             fruit.remove_from_sprite_lists()
             arcade.play_sound(self.collision_sound)
             self.list_length = self.list_length + 1
-            hit_list = []
+            
             if (self.list_length >= 4):
                 self.scoreboard.update_score()
                 self.list_length = 0
-                
+            hit_list = []    
             
             
         
