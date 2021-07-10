@@ -4,10 +4,9 @@ from math_properties import constants
 from math_properties.falling_item import FallingItem
 from math_properties.scoreboard import Scoreboard
 from math_properties.player import Player
-import time
+
 
 class Director(arcade.View):
-
     def __init__(self):
         super().__init__()
 
@@ -16,20 +15,32 @@ class Director(arcade.View):
         self.player = None
         self.fallingItem = None
         self.background = None
-        self.score = 0
-        self.basket_list = []
+        self.list_length = 0
         self.num_tries = 0
-        self.text = "Scoreboard:\nearned points: %d \npoints till next level: %d\n %s+ = + " %(0, 10, '')
+        self.basket_list = []
+        self.score = 0
+
+        # (AH) Instantiate Scoreboard Class so Scoreboard(self) != Director(self)
+        self.scoreboard = Scoreboard()
+
+        # (AH) LATER equation_length should be a variable depending on Property.
+        self.equation_length = 4
+
+        self.text = (
+            "Scoreboard:\nearned points: %d \npoints till next level: %d\n %s+ = + "
+            % (0, 10, "")
+        )
 
     def setup(self):
         self.player = Player()
+        self.scoreboard = Scoreboard()
         # Load background texture
         self.background = arcade.load_texture(constants.BACKGROUND)
         # Load game sounds
-        self.collision_sound = arcade.load_sound("math_properties/assets/sd_0.wav")
-        self.move_up_sound = arcade.load_sound("math_properties/assets/applause.wav")
-        # self.move_down_sound = arcade.load_sound(".wav")
-        self.background_music = arcade.load_sound("math_properties/assets/guitar-1.wav")
+        self.collision_sound = constants.COLLISION_SOUND
+        self.move_up_sound = constants.MOVE_UP_SOUND
+        self.move_down_sound = constants.MOVE_DOWN_SOUND
+        self.background_music = constants.BACKGROUND_MUSIC
 
     def on_draw(self):
         """
@@ -45,7 +56,8 @@ class Director(arcade.View):
         )
         self.player.draw()
         self.falling_item_list.draw()
-        Scoreboard.draw_scoreboard(self)
+        self.scoreboard.draw_scoreboard()
+        arcade.finish_render()
 
     def on_update(self, delta_time: float):
         self.current_time += 1
@@ -64,58 +76,46 @@ class Director(arcade.View):
                 fr.kill()
         self.player.update()
 
-        # Collision: list and sound.
+        # Collision
         hit_list = arcade.check_for_collision_with_list(
             self.player, self.falling_item_list
         )
-        if hit_list:
-            arcade.play_sound(self.collision_sound)
 
-        # (AH) Begin block to verify Math Property.
-        # (AH) include collected fruit into equation list.
-        self.equation_list.extend(hit_list)
-
-        # (AH) check if enough fruit has been collected for the equation.
-        # (AH) NOW only checking for Commutative Property of Addition.
-        # (AH) LATER use Math Class to check for all math properties.
-        if len(self.equation_list) == self.equation_length:
-            if (
-                self.equation_list[2] == self.equation_list[1]
-                and self.equation_list[3] == self.equation_list[0]
-            ):
-                self.score += 1
-            # (AH) applause sound when correct.
-            arcade.play_sound(self.move_up_sound)
-
-            # (AH) for Beta Release, stop after one correct equation.
-            time.sleep(5)
-            arcade.close_window()
-            return
-
-        # (AH) remove to release object from memory.
+        # (AH) Question: why this For Loop ?
         for fruit in hit_list:
+            self.collision_sound
+            # (AH) basket_list is equation to compare with math property.
+            self.basket_list.append(fruit)
+            # (AH) remove to release object from memory.
             fruit.remove_from_sprite_lists()
-        if (len(hit_list) > 0):
-            Scoreboard.update_scoreboard(self, hit_list)
-        length = len(self.basket_list)
-        if (length >= 4):
-            Scoreboard.update_score(self)
+            self.list_length = self.list_length + 1
+
+        if len(hit_list) > 0:
+
+            # (AH) pass in parameters for this Scoreboard Instance.
+            self.scoreboard.update_scoreboard(self.basket_list)
+
+        if self.list_length >= self.equation_length:
+
+            # (AH) pass in parameters for this Scoreboard Instance.
+            self.scoreboard.update_score(hit_list, self.basket_list, self.score)
             hit_list = []
+            self.list_length = 0
+            self.basket_list = []
 
-        # (AH) for Beta Release, stop after one correct equation.
+        # (AH) WHERE should game end check go?
         # (AH) Conditional stmts to check for mastery.
-        if len(self.equation_list) >= self.equation_length:
-            self.num_tries += 1
-            if self.score / self.num_tries > 0.85:
-                # (AH) End Sound.
-                arcade.play_sound(self.background_music)
-                arcade.close_window()
+        # if len(self.equation_list) >= self.equation_length:
+        # self.num_tries += 1
+        # if self.score / self.num_tries > 0.85:
+        # (AH) End Sound.
+        #  arcade.play_sound(self.background_music)
+        #  arcade.close_window()
 
-        return
+        # return
+        # (SA) Above code block that is commented out always exits game if there is an equation finished. also should be moved
+        # to scoreboard class.
         # (AH) End block to verify Math Property.
-
-    def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
-        pass
 
     def on_mouse_motion(self, x: float, y: float, dx: float, dy: float):
         self.player.center_x = x
@@ -133,4 +133,3 @@ class Director(arcade.View):
 
     def on_key_release(self, symbol: int, modifiers: int):
         self.player.change_x = 0
-

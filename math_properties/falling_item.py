@@ -4,12 +4,12 @@ from math_properties import constants
 
 
 fruits_info = {}
-fruits_info["apple"] = [constants.APPLE, 0.2]
-fruits_info["banana"] = [constants.BANANA, 0.4]
-fruits_info["strawberry"] = [constants.STRAWBERRY, 0.09]
-fruits_info["watermelon"] = [constants.WATERMELON, 0.12]
-fruits_info["pineapple"] = [constants.PINEAPPLE, 0.3]
-fruits_info["kiwi"] = [constants.KIWI, 0.2]
+fruits_info["apple"] = [constants.APPLE, 0.15]
+fruits_info["banana"] = [constants.BANANA, 0.15]
+fruits_info["strawberry"] = [constants.STRAWBERRY, 0.15]
+fruits_info["watermelon"] = [constants.WATERMELON, 0.15]
+fruits_info["pineapple"] = [constants.PINEAPPLE, 0.2]
+fruits_info["kiwi"] = [constants.KIWI, 0.15]
 fruits_name_list = list(fruits_info.keys())
 
 
