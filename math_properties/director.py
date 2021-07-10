@@ -5,8 +5,8 @@ from math_properties.falling_item import FallingItem
 from math_properties.scoreboard import Scoreboard
 from math_properties.player import Player
 
-class Director(arcade.View):
 
+class Director(arcade.View):
     def __init__(self):
         super().__init__()
 
@@ -17,6 +17,19 @@ class Director(arcade.View):
         self.background = None
         self.list_length = 0
         self.num_tries = 0
+        self.basket_list = []
+        self.score = 0
+
+        # (AH) Instantiate Scoreboard Class so Scoreboard(self) != Director(self)
+        self.scoreboard = Scoreboard()
+
+        # (AH) LATER equation_length should be a variable depending on Property.
+        self.equation_length = 4
+
+        self.text = (
+            "Scoreboard:\nearned points: %d \npoints till next level: %d\n %s+ = + "
+            % (0, 10, "")
+        )
 
     def setup(self):
         self.player = Player()
@@ -24,9 +37,10 @@ class Director(arcade.View):
         # Load background texture
         self.background = arcade.load_texture(constants.BACKGROUND)
         # Load game sounds
-        self.collision_sound = arcade.load_sound("math_properties/assets/sd_0.wav")
-        # self.move_down_sound = arcade.load_sound(".wav")
-        self.background_music = arcade.load_sound("math_properties/assets/guitar-1.wav")
+        self.collision_sound = constants.COLLISION_SOUND
+        self.move_up_sound = constants.MOVE_UP_SOUND
+        self.move_down_sound = constants.MOVE_DOWN_SOUND
+        self.background_music = constants.BACKGROUND_MUSIC
 
     def on_draw(self):
         """
@@ -62,39 +76,45 @@ class Director(arcade.View):
                 fr.kill()
         self.player.update()
 
-        #Collision 
-        hit_list = arcade.check_for_collision_with_list(self.player, self.falling_item_list)
+        # Collision
+        hit_list = arcade.check_for_collision_with_list(
+            self.player, self.falling_item_list
+        )
 
-        for fruit in hit_list:  
-            self.scoreboard.update_scoreboard(fruit)
+        # (AH) Question: why this For Loop ?
+        for fruit in hit_list:
+            self.collision_sound
+            # (AH) basket_list is equation to compare with math property.
+            self.basket_list.append(fruit)
             # (AH) remove to release object from memory.
             fruit.remove_from_sprite_lists()
-            arcade.play_sound(self.collision_sound)
             self.list_length = self.list_length + 1
-            
-            if (self.list_length >= 4):
-                self.scoreboard.update_score()
-                self.list_length = 0
-            hit_list = []    
-            
-            
-        
-        
 
-        # (AH) for Beta Release, stop after one correct equation.
+        if len(hit_list) > 0:
+
+            # (AH) pass in parameters for this Scoreboard Instance.
+            self.scoreboard.update_scoreboard(hit_list, self.basket_list, self.score)
+
+        if self.list_length >= self.equation_length:
+
+            # (AH) pass in parameters for this Scoreboard Instance.
+            self.scoreboard.update_score(self, hit_list, self.basket_list, self.score)
+            hit_list = []
+            self.list_length = 0
+
+        # (AH) WHERE should game end check go?
         # (AH) Conditional stmts to check for mastery.
         # if len(self.equation_list) >= self.equation_length:
-            # self.num_tries += 1
-            # if self.score / self.num_tries > 0.85:
-                # (AH) End Sound.
-               #  arcade.play_sound(self.background_music)
-               #  arcade.close_window()
+        # self.num_tries += 1
+        # if self.score / self.num_tries > 0.85:
+        # (AH) End Sound.
+        #  arcade.play_sound(self.background_music)
+        #  arcade.close_window()
 
         # return
         # (SA) Above code block that is commented out always exits game if there is an equation finished. also should be moved
         # to scoreboard class.
         # (AH) End block to verify Math Property.
-
 
     def on_mouse_motion(self, x: float, y: float, dx: float, dy: float):
         self.player.center_x = x
@@ -112,4 +132,3 @@ class Director(arcade.View):
 
     def on_key_release(self, symbol: int, modifiers: int):
         self.player.change_x = 0
-
