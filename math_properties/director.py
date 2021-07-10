@@ -93,14 +93,15 @@ class Director(arcade.View):
         if len(hit_list) > 0:
 
             # (AH) pass in parameters for this Scoreboard Instance.
-            self.scoreboard.update_scoreboard(hit_list, self.basket_list, self.score)
+            self.scoreboard.update_scoreboard(self.basket_list)
 
         if self.list_length >= self.equation_length:
 
             # (AH) pass in parameters for this Scoreboard Instance.
-            self.scoreboard.update_score(self, hit_list, self.basket_list, self.score)
+            self.scoreboard.update_score(hit_list, self.basket_list, self.score)
             hit_list = []
             self.list_length = 0
+            self.basket_list = []
 
         # (AH) WHERE should game end check go?
         # (AH) Conditional stmts to check for mastery.

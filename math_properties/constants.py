@@ -15,7 +15,7 @@ KIWI = PATH + "/assets/kiwi.png"
 PINEAPPLE = PATH + "/assets/pineapple.png"
 STRAWBERRY = PATH + "/assets/strawberry.png"
 WATERMELON =  PATH + "/assets/watermelon.png"
-WHITE = PATH + "/assets/white.png"
+WHITESPRITE = PATH + "/assets/white.png"
 
 # (AH) Game Sounds:
 # collision_sound when fruit collected in basket.
