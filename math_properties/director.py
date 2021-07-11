@@ -77,9 +77,17 @@ class Director(arcade.View):
         self.player.update()
 
         # Collision
+        '''
         hit_list = arcade.check_for_collision_with_list(
             self.player, self.falling_item_list
-        )
+        )'''
+        hit_list = [] #List of fruits, witch are catch by paddle
+        for fruit in self.falling_item_list:
+            #Comparison in x axis
+            if fruit.left > self.player.left and fruit.right < self.player.right:
+                #Comparison in y axis            
+                if 50 < fruit.bottom < 120:
+                    hit_list.append(fruit)       
 
         # (AH) Question: why this For Loop ?
         for fruit in hit_list:
