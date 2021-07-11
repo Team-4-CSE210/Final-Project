@@ -35,16 +35,16 @@ class Scoreboard:
         self.white = arcade.load_texture(constants.WHITESPRITE)
 
         self.firstSprite = arcade.Sprite(None, .08, 0, 0, 0, 0, self.start_x - 120, start_y2)
-        self.firstSprite = self.white
+        self.firstSprite.texture = self.white
 
         self.secondSprite = arcade.Sprite(None, .08, 0, 0, 0, 0, self.start_x - 40, start_y2)
-        self.secondSprite = self.white
+        self.secondSprite.texture = self.white
 
         self.thirdSprite = arcade.Sprite(None, .08, 0, 0, 0, 0, self.start_x + 40, start_y2)
-        self.thirdSprite = self.white
+        self.thirdSprite.texture = self.white
 
         self.fourthSprite = arcade.Sprite(None, .08, 0, 0, 0, 0, self.start_x + 120, start_y2)
-        self.fourthSprite = self.white
+        self.fourthSprite.texture = self.white
 
     def update_score(self, basket_list, equation_length, score):
         """
