@@ -3,6 +3,7 @@ import random
 from math_properties import constants
 
 
+# update score could return true when we want the game to end and then director can make the end screen appear.
 class Scoreboard:
     """A class that keeps track of the scoreboard.
 
@@ -82,7 +83,7 @@ class Scoreboard:
             # (AH) correct eqn for Commutative Property of Addition.
             if basket_list[2] == basket_list[1] and basket_list[3] == basket_list[0]:
 
-                # score += 1
+                score += 1
 
                 message_list = [
                     "Congrats! You got it right!",
@@ -108,12 +109,13 @@ class Scoreboard:
                 # (AH) gonk sound when incorrect.
                 arcade.play_sound(move_down_sound)
 
-            # if self.score / self.num_tries > 0.85 && num_tries >= 3:
-            # go to end screen
-
+        self.num_tries = self.num_tries + 1
         if self.num_tries > 0:
             self.point_percent = 100 * (score / self.num_tries)
-        self.num_tries = self.num_tries + 1
+        
+        # if self.point_percent >= 85 and num_tries >= 3:
+            #send to end screen or return a true so director can send to end screen.
+        
         self.text = (
             "Scoreboard:\npercent of mastery: %d \nminimum percent needed: 85\n\n     +"
             "                      =                +\n\n\n%s"
