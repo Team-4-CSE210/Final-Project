@@ -37,10 +37,10 @@ class Director(arcade.View):
         # Load background texture
         self.background = arcade.load_texture(constants.BACKGROUND)
         # Load game sounds
-        self.collision_sound = constants.COLLISION_SOUND
-        self.move_up_sound = constants.MOVE_UP_SOUND
-        self.move_down_sound = constants.MOVE_DOWN_SOUND
-        self.background_music = constants.BACKGROUND_MUSIC
+        self.collision_sound = arcade.load_sound(constants.COLLISION_SOUND)
+        self.move_up_sound = arcade.load_sound(constants.MOVE_UP_SOUND)
+        self.move_down_sound = arcade.load_sound(constants.MOVE_DOWN_SOUND)
+        self.background_music = arcade.load_sound(constants.BACKGROUND_MUSIC)
 
     def on_draw(self):
         """
@@ -77,26 +77,25 @@ class Director(arcade.View):
         self.player.update()
 
         # Collision
-        '''
+        """
         hit_list = arcade.check_for_collision_with_list(
             self.player, self.falling_item_list
-        )'''
-        hit_list = [] #List of fruits, witch are catch by paddle
+        )"""
+        hit_list = []  # List of fruits caught by paddle
         for fruit in self.falling_item_list:
-            #Comparison in x axis
+            # Comparison in x axis
             if fruit.left > self.player.left and fruit.right < self.player.right:
-                #Comparison in y axis            
+                # Comparison in y axis
                 if 50 < fruit.bottom < 120:
-                    hit_list.append(fruit)       
+                    hit_list.append(fruit)
 
-        # (AH) Question: why this For Loop ?
-        for fruit in hit_list:
-            self.collision_sound
-            # (AH) basket_list is equation to compare with math property.
-            self.basket_list.append(fruit)
-            # (AH) remove to release object from memory.
-            fruit.remove_from_sprite_lists()
-            self.list_length = self.list_length + 1
+                    # (AH) click sound when collected in basket.
+                    arcade.play_sound(self.collision_sound)
+                    # (AH) basket_list is equation to compare with math property.
+                    self.basket_list.append(fruit.get_type())
+                    # (AH) remove to release object from memory.
+                    fruit.remove_from_sprite_lists()
+                    self.list_length = self.list_length + 1
 
         if len(hit_list) > 0:
 
@@ -106,24 +105,18 @@ class Director(arcade.View):
         if self.list_length >= self.equation_length:
 
             # (AH) pass in parameters for this Scoreboard Instance.
-            self.scoreboard.update_score(hit_list, self.basket_list, self.score)
-            hit_list = []
+            self.scoreboard.update_score(
+                self.basket_list,
+                self.equation_length,
+                self.score,
+                self.move_up_sound,
+                self.move_down_sound,
+            )
+            hit_list.clear()
             self.list_length = 0
-            self.basket_list = []
-
-        # (AH) WHERE should game end check go?
-        # (AH) Conditional stmts to check for mastery.
-        # if len(self.equation_list) >= self.equation_length:
-        # self.num_tries += 1
-        # if self.score / self.num_tries > 0.85:
-        # (AH) End Sound.
-        #  arcade.play_sound(self.background_music)
-        #  arcade.close_window()
-
-        # return
-        # (SA) Above code block that is commented out always exits game if there is an equation finished. also should be moved
-        # to scoreboard class.
-        # (AH) End block to verify Math Property.
+            # (AH) empty basket_list of fruit.
+            # (AH) Note: list is modified/cleared in place without rebinding.
+            self.basket_list.clear()
 
     def on_mouse_motion(self, x: float, y: float, dx: float, dy: float):
         self.player.center_x = x

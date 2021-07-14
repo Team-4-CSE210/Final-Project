@@ -29,14 +29,22 @@ class InstructionView(arcade.View):
             "Collect fruit matching the pattern:  A + B = B + A",
             constants.SCREEN_WIDTH / 2,
             constants.SCREEN_HEIGHT / 2 - (2 * 75),
-            arcade.color.BLACK,
+            arcade.color.PURPLE,
+            font_size=20,
+            anchor_x="center",
+        )
+        arcade.draw_text(
+            "Type 'q' to quit.",
+            constants.SCREEN_WIDTH / 2,
+            constants.SCREEN_HEIGHT / 2 - (3 * 75),
+            arcade.color.RED,
             font_size=20,
             anchor_x="center",
         )
         arcade.draw_text(
             "Click to advance",
             constants.SCREEN_WIDTH / 2,
-            constants.SCREEN_HEIGHT / 2 - (3 * 75),
+            constants.SCREEN_HEIGHT / 2 - (4 * 75),
             arcade.color.GRAY,
             font_size=20,
             anchor_x="center",
