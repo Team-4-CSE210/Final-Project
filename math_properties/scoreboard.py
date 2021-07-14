@@ -3,7 +3,6 @@ import random
 from math_properties import constants
 
 
-# update score could return true when we want the game to end and then director can make the end screen appear.
 class Scoreboard:
     """A class that keeps track of the scoreboard.
 
@@ -121,6 +120,7 @@ class Scoreboard:
             "                      =                +\n\n\n%s"
             % (self.point_percent, self.message)
         )
+        return score
 
     def draw_scoreboard(self):
         """draws the scoreboard
