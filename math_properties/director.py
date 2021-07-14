@@ -57,7 +57,6 @@ class Director(arcade.View):
         self.player.draw()
         self.falling_item_list.draw()
         self.scoreboard.draw_scoreboard()
-        arcade.finish_render()
 
     def on_update(self, delta_time: float):
         self.current_time += 1
@@ -105,7 +104,7 @@ class Director(arcade.View):
         if self.list_length >= self.equation_length:
 
             # (AH) pass in parameters for this Scoreboard Instance.
-            self.scoreboard.update_score(
+            self.score = self.scoreboard.update_score(
                 self.basket_list,
                 self.equation_length,
                 self.score,
