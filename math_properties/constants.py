@@ -28,8 +28,10 @@ COLLISION_SOUND = PATH + "/assets/sd_0.wav"
 MOVE_UP_SOUND = PATH + "/assets/applause.wav"
 # move_down_sound when equation is incorrect.
 MOVE_DOWN_SOUND = PATH + "/assets/gong.wav"
-# using background_music as end of game sound.
-BACKGROUND_MUSIC = PATH + "/assets/Won!.wav"
+# using background_music as win end of game sound.
+BACKGROUND_MUSIC = PATH + "/assets/applause-clapping-church-crowd-immersive.wav"
+# using do_over_music as lose end of game sound.
+DO_OVER_MUSIC = PATH + "/assets/death_bell_sound_effect.wav"
 
 # (AH) RGB screen colors work on additive process.
 '''BLACK = (0, 0, 0)
