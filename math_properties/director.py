@@ -16,20 +16,15 @@ class Director(arcade.View):
         self.fallingItem = None
         self.background = None
         self.list_length = 0
-        self.num_tries = 0
         self.basket_list = []
         self.score = 0
+ 
 
         # (AH) Instantiate Scoreboard Class so Scoreboard(self) != Director(self)
         self.scoreboard = Scoreboard()
 
         # (AH) LATER equation_length should be a variable depending on Property.
         self.equation_length = 4
-
-        self.text = (
-            "Scoreboard:\nearned points: %d \npoints till next level: %d\n %s+ = + "
-            % (0, 10, "")
-        )
 
     def setup(self):
         self.player = Player()
@@ -60,11 +55,12 @@ class Director(arcade.View):
 
     def on_update(self, delta_time: float):
         self.current_time += 1
+        
         self.falling_item_list.update()
-        if self.current_time % 120 == 0:
+        if self.current_time % 50 == 0:
             fruit = FallingItem(
                 random.choice(
-                    ["apple", "banana", "strawberry", "watermelon", "pineapple", "kiwi"]
+                    constants.FRUITLIST
                 )
             )
             self.falling_item_list.append(fruit)
@@ -76,10 +72,6 @@ class Director(arcade.View):
         self.player.update()
 
         # Collision
-        """
-        hit_list = arcade.check_for_collision_with_list(
-            self.player, self.falling_item_list
-        )"""
         hit_list = []  # List of fruits caught by paddle
         for fruit in self.falling_item_list:
             # Comparison in x axis
@@ -117,6 +109,16 @@ class Director(arcade.View):
             # (AH) Note: list is modified/cleared in place without rebinding.
             self.basket_list.clear()
 
+        if  self.scoreboard.num_tries >= 5 and self.scoreboard.point_percent < 20:
+            game_view = GameOverView(self.score, self.current_time)
+            self.window.show_view(game_view)
+
+        if self.score >= 3 and self.scoreboard.point_percent >= 85:
+            game_view = WinGameView(self.score, self.current_time)
+            self.window.show_view(game_view)
+
+
+
     def on_mouse_motion(self, x: float, y: float, dx: float, dy: float):
         self.player.center_x = x
         # self.player.center_y = y
@@ -133,3 +135,88 @@ class Director(arcade.View):
 
     def on_key_release(self, symbol: int, modifiers: int):
         self.player.change_x = 0
+
+
+
+####    Game Over View    ####
+class GameOverView(arcade.View):
+    def __init__(self, score, current_time):
+        super().__init__()
+        self.time_taken = current_time/60
+        self.score = score
+    
+
+
+    def on_show(self):
+        arcade.set_background_color(arcade.color.BLACK)
+        # (AH) load game over sound.
+        self.background_music = arcade.load_sound(constants.BACKGROUND_MUSIC)
+
+    def on_draw(self):
+        arcade.start_render()
+        """
+        Draw "Game over" across the screen.
+        """
+        arcade.draw_text("GAME OVER", constants.SCREEN_WIDTH/2, 400, arcade.color.WHITE, 54, anchor_x="center")
+        arcade.draw_text("Click to restart", constants.SCREEN_WIDTH/2, 300, arcade.color.WHITE, 24, anchor_x="center")
+
+        time_taken_formatted = f"{round(self.time_taken, 2)} seconds"
+        arcade.draw_text(f"Time taken: {time_taken_formatted}",
+                         constants.SCREEN_WIDTH/2,
+                         200,
+                         arcade.color.GRAY,
+                         font_size=15,
+                         anchor_x="center")
+
+        output_total = f"Total Score: {self.score}"
+        arcade.draw_text(output_total, 10, 10, arcade.color.WHITE, 14)
+
+        # (AH) play fanfare game over sound.
+        #arcade.play_sound(self.background_music)
+
+    def on_mouse_press(self, _x, _y, _button, _modifiers):
+        game_view = Director()
+        game_view.setup()
+        self.window.show_view(game_view)
+
+
+
+### Win Game View  ###
+class WinGameView(arcade.View):
+    def __init__(self, score, current_time):
+        super().__init__()
+        self.time_taken = current_time/60
+        self.score = score
+    
+    def on_show(self):
+        arcade.set_background_color(arcade.color.BLUEBERRY)
+        # (AH) load game over sound.
+        self.background_music = arcade.load_sound(constants.MOVE_UP_SOUND)
+
+    def on_draw(self):
+        arcade.start_render()
+        """
+        Draw "Game over" across the screen.
+        """
+        arcade.draw_text("YOU WON!", constants.SCREEN_WIDTH/2, 400, \
+        arcade.color.SCHOOL_BUS_YELLOW, 54, anchor_x = 'center')
+        arcade.draw_text("Click to restart", constants.SCREEN_WIDTH/2, 300, arcade.color.BLACK, 24, anchor_x="center")
+
+        time_taken_formatted = f"{round(self.time_taken, 2)} seconds"
+        arcade.draw_text(f"Time taken: {time_taken_formatted}",
+                         constants.SCREEN_WIDTH/2,
+                         200,
+                         arcade.color.BLACK,
+                         font_size=15,
+                         anchor_x="center")
+
+        output_total = f"Total Score: {self.score}"
+        arcade.draw_text(output_total, 10, 10, arcade.color.BLACK, 14)
+
+        # (AH) play fanfare game over sound.
+        #arcade.play_sound(self.background_music)
+
+    def on_mouse_press(self, _x, _y, _button, _modifiers):
+        game_view = Director()
+        game_view.setup()
+        self.window.show_view(game_view)
