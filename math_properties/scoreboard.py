@@ -19,13 +19,14 @@ class Scoreboard:
         """
 
         ##  Game vars
-        self.point_percent = 0
-        self.num_tries = 0
+        self.times_wrong = 0
+        self.points_left = 10
         self.list_length = 0
+        self.score = 0
 
 
         ##  Texts for display
-        self.text_score = "Scoreboard:\nPercent of mastery: %d \nMinimum percent needed: 85" % (self.point_percent)
+        self.text_score = "Scoreboard:\nScore: %d \nScore to win: 8" % (self.score)
         self.text_equation = "+              =              +"
         self.text_message = "Welcome!"
 
@@ -88,7 +89,7 @@ class Scoreboard:
             # (AH) correct eqn for Commutative Property of Addition.
             if basket_list[2] == basket_list[1] and basket_list[3] == basket_list[0]:
 
-                score += 1
+                self.score += 1
 
                 message_list = [
                     "Congrats! You got it right!",
@@ -103,6 +104,7 @@ class Scoreboard:
 
             # (AH) incorrect eqn for Commutative Property of Addition.
             else:
+                self.times_wrong += 1
                 message_list = [
                     "Keep trying!",
                     "You can do this!",
@@ -114,16 +116,9 @@ class Scoreboard:
                 # (AH) gonk sound when incorrect.
                 arcade.play_sound(move_down_sound)
 
-        self.num_tries = self.num_tries + 1
-        if self.num_tries > 0:
-            self.point_percent = 100 * (score / self.num_tries)
+        self.text_score = "Scoreboard:\nScore: %d \nScore to win: 8" % (self.score)
         
-        # if self.point_percent >= 85 and num_tries >= 3:
-            #send to end screen or return a true so director can send to end screen.
-
-        self.text_score = "Scoreboard:\nPercent of mastery: %d \nMinimum percent needed: 85" % (self.point_percent)
-        
-        return score
+        return self.score
 
     def update_scoreboard(self, basket_list):
         """updates the scoreboard with fruit caught and current score as well as how many points left to win.
@@ -152,10 +147,9 @@ class Scoreboard:
 
 
         # sets the text shown
-        self.text = (
-            "Scoreboard:\nPercent of mastery: %d \nMinimum percent needed: 85\n\n    +"
-            "             =            +\n\n\n%s"
-            % (self.point_percent, self.text_message)
+        self.text_score = (
+            "Scoreboard:\nScore: %d \nScore to win: 8\n"
+            % (self.score)
         )
 
     def draw_scoreboard(self):
