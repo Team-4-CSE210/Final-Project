@@ -17,8 +17,8 @@ class Director(arcade.View):
         self.background = None
         self.list_length = 0
         self.basket_list = []
-        self.score = 0
- 
+        # self.score = 0
+
 
         # (AH) Instantiate Scoreboard Class so Scoreboard(self) != Director(self)
         self.scoreboard = Scoreboard()
@@ -55,7 +55,7 @@ class Director(arcade.View):
 
     def on_update(self, delta_time: float):
         self.current_time += 1
-        
+
         self.falling_item_list.update()
         if self.current_time % 50 == 0:
             fruit = FallingItem(
@@ -96,10 +96,9 @@ class Director(arcade.View):
         if self.list_length >= self.equation_length:
 
             # (AH) pass in parameters for this Scoreboard Instance.
-            self.score = self.scoreboard.update_score(
+            self.scoreboard.update_score(
                 self.basket_list,
                 self.equation_length,
-                self.score,
                 self.move_up_sound,
                 self.move_down_sound,
             )
@@ -109,12 +108,14 @@ class Director(arcade.View):
             # (AH) Note: list is modified/cleared in place without rebinding.
             self.basket_list.clear()
 
+        # Game Over if >= 5 incorrect.
         if  self.scoreboard.times_wrong >= 5:
-            game_view = GameOverView(self.score, self.current_time)
+            game_view = GameOverView(self.scoreboard.score, self.current_time)
             self.window.show_view(game_view)
 
-        if self.score >= 8:
-            game_view = WinGameView(self.score, self.current_time)
+        # Win Game if >= 8 correct.
+        if self.scoreboard.score >= 8:
+            game_view = WinGameView(self.scoreboard.score, self.current_time)
             self.window.show_view(game_view)
 
 
@@ -144,7 +145,7 @@ class GameOverView(arcade.View):
         super().__init__()
         self.time_taken = current_time/60
         self.score = score
-    
+
 
 
     def on_show(self):
@@ -187,7 +188,7 @@ class WinGameView(arcade.View):
         super().__init__()
         self.time_taken = current_time/60
         self.score = score
-    
+
     def on_show(self):
         arcade.set_background_color(arcade.color.BLUEBERRY)
         # (AH) load game over sound.

@@ -41,28 +41,28 @@ class Scoreboard:
         self.textures["watermelon"] = arcade.load_texture(constants.WATERMELON)
         self.textures["grapes"] = arcade.load_texture(constants.GRAPES)
         self.textures["checkbox"] = arcade.load_texture(constants.CHECKBOX)
-        
-        
+
+
         ##  Symbols Construction
-        
+
         self.start_x = constants.SCREEN_WIDTH - 200
         self.start_y = constants.SCREEN_HEIGHT - 60
 
         it_pos_x = self.start_x - 120
         var_x = 80
-        
+
         start_y2 = self.start_y - 42 #32
         self.symbols_list = arcade.SpriteList()
         for i in range(4):
             sprite = Symbol(it_pos_x, start_y2)
             sprite.set_texture(self.textures["checkbox"])
             self.symbols_list.append(sprite)
-            
+
             it_pos_x += var_x
 
 
     def update_score(
-        self, basket_list, equation_length, score, move_up_sound, move_down_sound
+        self, basket_list, equation_length, move_up_sound, move_down_sound
     ):
         """
             updates the current score
@@ -117,8 +117,8 @@ class Scoreboard:
                 arcade.play_sound(move_down_sound)
 
         self.text_score = "Scoreboard:\nScore: %d \nScore to win: 8" % (self.score)
-        
-        return self.score
+
+        return
 
     def update_scoreboard(self, basket_list):
         """updates the scoreboard with fruit caught and current score as well as how many points left to win.
@@ -141,7 +141,7 @@ class Scoreboard:
             for i in self.symbols_list[1:]:
                 i.set_texture(self.textures["checkbox"])
             self.symbols_list[0].set_texture(sprite)
-        
+
         else:
             self.symbols_list[self.list_length -1].set_texture(sprite)
 
@@ -174,7 +174,7 @@ class Scoreboard:
         #Equation
         arcade.draw_text(self.text_equation, self.start_x, self.start_y - 50, \
         arcade.color.BLACK, 18, anchor_x='center', anchor_y='center', bold = True)
-        
+
         #Message
         arcade.draw_text(self.text_message, self.start_x, self.start_y - 100, \
         arcade.color.BLACK, 15, anchor_x='center', anchor_y='center', bold = True)
