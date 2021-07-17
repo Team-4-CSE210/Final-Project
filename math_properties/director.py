@@ -109,11 +109,11 @@ class Director(arcade.View):
             # (AH) Note: list is modified/cleared in place without rebinding.
             self.basket_list.clear()
 
-        if  self.scoreboard.num_tries >= 5 and self.scoreboard.point_percent < 20:
+        if  self.scoreboard.times_wrong >= 5:
             game_view = GameOverView(self.score, self.current_time)
             self.window.show_view(game_view)
 
-        if self.score >= 3 and self.scoreboard.point_percent >= 85:
+        if self.score >= 8:
             game_view = WinGameView(self.score, self.current_time)
             self.window.show_view(game_view)
 
