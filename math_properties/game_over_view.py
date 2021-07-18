@@ -9,6 +9,8 @@ class GameOverView(arcade.View):
 
     def on_show(self):
         arcade.set_background_color(arcade.color.BLACK)
+        # (AH) load game over sound.
+        self.background_music = arcade.load_sound(constants.BACKGROUND_MUSIC)
 
     def on_draw(self):
         arcade.start_render()
@@ -28,6 +30,9 @@ class GameOverView(arcade.View):
 
         output_total = f"Total Score: {self.window.total_score}"
         arcade.draw_text(output_total, 10, 10, arcade.color.WHITE, 14)
+
+        # (AH) play fanfare game over sound.
+        arcade.play_sound(self.background_music)
 
     def on_mouse_press(self, _x, _y, _button, _modifiers):
         game_view = Director()

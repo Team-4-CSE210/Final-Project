@@ -1,6 +1,7 @@
 import arcade
-from math_properties import constants
 import random
+from math_properties import constants
+from math_properties.symbol import Symbol
 
 
 class Scoreboard:
@@ -12,43 +13,59 @@ class Scoreboard:
 
     def __init__(self):
         """The class constructor.
-        
+
         Args:
             self (Scoreboard): an instance of Scoreboard.
         """
-        self.message = "Welcome!"
-        self.point_percent = 0
-        self.text = "Scoreboard:\npercent of mastery: %d \nminimum percent needed:  85\n\n     +" \
-                    "                      =                +\n\n\n%s" % (self.point_percent, self.message)
-        self.num_tries = 0
+
+        ##  Game vars
+        self.times_wrong = 0
+        self.points_left = 10
         self.list_length = 0
+        self.score = 0
+
+
+        ##  Texts for display
+        self.text_score = "Scoreboard:\nScore: %d \nScore to win: 8" % (self.score)
+        self.text_equation = "+              =              +"
+        self.text_message = "Welcome!"
+
+        ##  Textures Construction
+        self.textures = {}
+
+        self.textures["pineapple"] = arcade.load_texture(constants.PINEAPPLE)
+        self.textures["apple"] = arcade.load_texture(constants.APPLE)
+        self.textures["banana"] = arcade.load_texture(constants.BANANA)
+        self.textures["kiwi"] = arcade.load_texture(constants.KIWI)
+        self.textures["strawberry"] = arcade.load_texture(constants.STRAWBERRY)
+        self.textures["watermelon"] = arcade.load_texture(constants.WATERMELON)
+        self.textures["grapes"] = arcade.load_texture(constants.GRAPES)
+        self.textures["checkbox"] = arcade.load_texture(constants.CHECKBOX)
+
+
+        ##  Symbols Construction
+
         self.start_x = constants.SCREEN_WIDTH - 200
         self.start_y = constants.SCREEN_HEIGHT - 60
-        start_y2 = self.start_y - 15
 
-        self.pineapple = arcade.load_texture(constants.PINEAPPLE)
-        self.apple = arcade.load_texture(constants.APPLE)
-        self.banana = arcade.load_texture(constants.BANANA)
-        self.kiwi = arcade.load_texture(constants.KIWI)
-        self.strawberry = arcade.load_texture(constants.STRAWBERRY)
-        self.watermelon = arcade.load_texture(constants.WATERMELON)
-        self.white = arcade.load_texture(constants.WHITESPRITE)
+        it_pos_x = self.start_x - 120
+        var_x = 80
 
-        self.firstSprite = arcade.Sprite(None, .08, 0, 0, 0, 0, self.start_x - 120, start_y2)
-        self.firstSprite = self.white
+        start_y2 = self.start_y - 42 #32
+        self.symbols_list = arcade.SpriteList()
+        for i in range(4):
+            sprite = Symbol(it_pos_x, start_y2)
+            sprite.set_texture(self.textures["checkbox"])
+            self.symbols_list.append(sprite)
 
-        self.secondSprite = arcade.Sprite(None, .08, 0, 0, 0, 0, self.start_x - 40, start_y2)
-        self.secondSprite = self.white
+            it_pos_x += var_x
 
-        self.thirdSprite = arcade.Sprite(None, .08, 0, 0, 0, 0, self.start_x + 40, start_y2)
-        self.thirdSprite = self.white
 
-        self.fourthSprite = arcade.Sprite(None, .08, 0, 0, 0, 0, self.start_x + 120, start_y2)
-        self.fourthSprite = self.white
-
-    def update_score(self, basket_list, equation_length, score):
+    def update_score(
+        self, basket_list, equation_length, move_up_sound, move_down_sound
+    ):
         """
-                updates the current score
+            updates the current score
 
         Equation checking happens here for falling items collected in basket.
 
@@ -64,94 +81,100 @@ class Scoreboard:
         # (AH) check if enough fruit has been collected for the equation.
         # (AH) NOW only checking for Commutative Property of Addition.
         # (AH) LATER use Math Class to check for all math properties.
+
+
+        #   If basket is full
         if len(basket_list) == equation_length:
+
+            # (AH) correct eqn for Commutative Property of Addition.
             if basket_list[2] == basket_list[1] and basket_list[3] == basket_list[0]:
-                score += 1
+
+                self.score += 1
+
+                message_list = [
+                    "Congrats! You got it right!",
+                    "Yeah, another point!",
+                    "Keep up the good work!",
+                    "Yay! You're doing awesome!",
+                ]
+                self.text_message = message_list[random.randint(0, 3)]
+
                 # (AH) applause sound when correct.
-                constants.MOVE_UP_SOUND
+                arcade.play_sound(move_up_sound)
 
+            # (AH) incorrect eqn for Commutative Property of Addition.
             else:
+                self.times_wrong += 1
+                message_list = [
+                    "Keep trying!",
+                    "You can do this!",
+                    "awe, you'll get the point next time!",
+                    "Keep at it!",
+                ]
+                self.text_message = message_list[random.randint(0, 3)]
+
                 # (AH) gonk sound when incorrect.
-                constants.MOVE_DOWN_SOUND
+                arcade.play_sound(move_down_sound)
 
-            message_list = ["congrats! you got it right!", "Yeah, another point!", "keep up the good work!",
-                            "Yay! your doing awesome!"]
-            self.message = message_list[random.randint(0, 3)]
+        self.text_score = "Scoreboard:\nScore: %d \nScore to win: 8" % (self.score)
 
-            # if self.score / self.num_tries > 0.85 && num_tries >= 3:
-            # go to end screen
-        else:
-            message_list = ["Keep trying!", "You can do this!", "awe, you'll get the point next time!", "keep at it!"]
-            self.message = message_list[random.randint(0, 3)]
-        if self.num_tries > 0:
-            self.point_percent = 100 * (score / self.num_tries)
-        self.num_tries = self.num_tries + 1
-        self.text = "Scoreboard:\npercent of mastery: %d \nminimum percent needed: 85\n\n     +" \
-                    "                      =                +\n\n\n%s" % (self.point_percent, self.message)
-
-    def draw_scoreboard(self):
-        """draws the scoreboard
-        
-        Args:
-            self (Director): an instance of Director.
-        """
-        arcade.draw_point(self.start_x, self.start_y, arcade.color.WHITE, 300)
-        arcade.draw_text(
-            self.text,
-            self.start_x,
-            self.start_y,
-            arcade.color.BLACK,
-            12,
-            anchor_x="center",
-            anchor_y="center",
-        )
-        self.firstSprite.draw()
-        self.secondSprite.draw()
-        self.thirdSprite.draw()
-        self.fourthSprite.draw()
+        return
 
     def update_scoreboard(self, basket_list):
         """updates the scoreboard with fruit caught and current score as well as how many points left to win.
-        
+
         Args:
             self (Director): an instance of Director.
             basket_list: a list of fruit that have hit the basket.
         """
+
         self.list_length = len(basket_list)
-        sprite = self.white
+        sprite = self.textures["checkbox"]
         for fruit in basket_list:
-            # (SA) finds the right texture to use in the list.
-            if ("pineapple" in fruit.texture.name):
-                sprite = self.pineapple
 
-            elif ("apple" in fruit.texture.name):
-                sprite = self.apple
-
-            elif ("banana" in fruit.texture.name):
-                sprite = self.banana
-
-            elif ("kiwi" in fruit.texture.name):
-                sprite = self.kiwi
-
-            elif ("strawberry" in fruit.texture.name):
-                sprite = self.strawberry
-
-            elif ("watermelon" in fruit.texture.name):
-                sprite = self.watermelon
+            # (AH) see Director Class retrieve info from Falling_Item Class get_type Method.
+            # self.basket_list.append(fruit.get_type())
+            sprite = self.textures[fruit]
 
         # sets the texture
-        if (1 == self.list_length):
-            self.secondSprite.texture = arcade.load_texture(constants.WHITESPRITE)
-            self.thirdSprite.texture = arcade.load_texture(constants.WHITESPRITE)
-            self.fourthSprite.texture = arcade.load_texture(constants.WHITESPRITE)
-            self.firstSprite.texture = sprite
-        elif 2 == self.list_length:
-            self.secondSprite.texture = sprite
-        elif 3 == self.list_length:
-            self.thirdSprite.texture = sprite
-        elif 4 == self.list_length:
-            self.fourthSprite.texture = sprite
+        if 1 == self.list_length:
+            for i in self.symbols_list[1:]:
+                i.set_texture(self.textures["checkbox"])
+            self.symbols_list[0].set_texture(sprite)
+
+        else:
+            self.symbols_list[self.list_length -1].set_texture(sprite)
+
 
         # sets the text shown
-        self.text = "Scoreboard:\npercent of mastery: %d \nminimum percent needed: 85\n\n     +" \
-                    "                      =                +\n\n\n%s" % (self.point_percent, self.message)
+        self.text_score = (
+            "Scoreboard:\nScore: %d \nScore to win: 8\n"
+            % (self.score)
+        )
+
+    def draw_scoreboard(self):
+        """draws the scoreboard
+
+        Args:
+            self (Director): an instance of Director.
+        """
+        #Draw Rectangle Background
+        arcade.draw_point(self.start_x, self.start_y, arcade.color.WHITE, 300)
+
+
+        #Draw Sprites
+        self.symbols_list.draw()
+
+
+        #Draw Texts
+        #Score
+        arcade.draw_text(self.text_score, self.start_x, self.start_y + 20, \
+        arcade.color.BLACK, 16, anchor_x='center', anchor_y='center', bold = True)
+
+        #Equation
+        arcade.draw_text(self.text_equation, self.start_x, self.start_y - 50, \
+        arcade.color.BLACK, 18, anchor_x='center', anchor_y='center', bold = True)
+
+        #Message
+        arcade.draw_text(self.text_message, self.start_x, self.start_y - 100, \
+        arcade.color.BLACK, 15, anchor_x='center', anchor_y='center', bold = True)
