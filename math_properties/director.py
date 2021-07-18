@@ -5,6 +5,9 @@ from math_properties.falling_item import FallingItem
 from math_properties.scoreboard import Scoreboard
 from math_properties.player import Player
 
+# (AH) to avoid Circular Import Error.
+import math_properties.instruction_view
+
 
 class Director(arcade.View):
     def __init__(self):
@@ -104,14 +107,13 @@ class Director(arcade.View):
             # (AH) Note: list is modified/cleared in place without rebinding.
             self.basket_list.clear()
 
-        # Game Over if >= 5 incorrect.
-        if self.scoreboard.times_wrong >= 5:
-            game_view = GameOverView(self.scoreboard.score, self.current_time)
-            self.window.show_view(game_view)
-
         # Win Game if >= 8 correct.
         if self.scoreboard.score >= 8:
             game_view = WinGameView(self.scoreboard.score, self.current_time)
+            self.window.show_view(game_view)
+        # Game Over if >= 5 incorrect.
+        elif self.scoreboard.times_wrong >= 5:
+            game_view = GameOverView(self.scoreboard.score, self.current_time)
             self.window.show_view(game_view)
 
     def on_mouse_motion(self, x: float, y: float, dx: float, dy: float):
@@ -183,9 +185,8 @@ class GameOverView(arcade.View):
         arcade.draw_text(output_total, 10, 10, arcade.color.WHITE, 14)
 
     def on_mouse_press(self, _x, _y, _button, _modifiers):
-        game_view = Director()
-        game_view.setup()
-        self.window.show_view(game_view)
+        instruction_view = math_properties.instruction_view.InstructionView()
+        self.window.show_view(instruction_view)
 
 
 ### Win Game View  ###
@@ -239,6 +240,5 @@ class WinGameView(arcade.View):
         arcade.draw_text(output_total, 10, 10, arcade.color.BLACK, 14)
 
     def on_mouse_press(self, _x, _y, _button, _modifiers):
-        game_view = Director()
-        game_view.setup()
-        self.window.show_view(game_view)
+        instruction_view = math_properties.instruction_view.InstructionView()
+        self.window.show_view(instruction_view)

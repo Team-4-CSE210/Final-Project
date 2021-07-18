@@ -1,11 +1,10 @@
 import arcade
 from math_properties import constants
-from math_properties.director import Director
 from math_properties.instruction_view import InstructionView
 
 
 class MenuView(arcade.View):
- 
+
     def on_show(self):
         arcade.set_background_color(arcade.color.DARK_GREEN)
 
